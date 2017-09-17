@@ -35,7 +35,9 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         narrow = setup.filter({$0.topic == decode_topic})
         let qCount = narrow.count
         if (qCount == 0) {
-            print("Goooooonnnnnne")
+            let play_scene = GameOverScene(fileNamed: "GameOver")
+            play_scene?.scaleMode = .aspectFill
+            self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
         }
         result = pickQuestion(input: UInt32(qCount))
         showData(input: result, filter: narrow)
