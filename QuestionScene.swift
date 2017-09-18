@@ -35,9 +35,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         narrow = setup.filter({$0.topic == decode_topic})
         let qCount = narrow.count
         if (qCount == 0) {
-            let play_scene = GameOverScene(fileNamed: "GameOver")
-            play_scene?.scaleMode = .aspectFill
-            self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
+            gameOver()
         }
         result = pickQuestion(input: UInt32(qCount))
         showData(input: result, filter: narrow)
@@ -216,9 +214,22 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         
     }
     func gameOver() {
-        let play_scene = GameOverScene(fileNamed: "GameOver")
-        play_scene?.scaleMode = .aspectFill
-        self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
+        let panel = SKSpriteNode(imageNamed: "Panel")
+        panel.position = CGPoint(x: 0, y: 0)
+        panel.zPosition = CGFloat(5.0)
+        
+        let play_again = SKSpriteNode(imageNamed:  "Play_again")
+        play_again.position = CGPoint(x: 0, y: 20)
+        play_again.zPosition = CGFloat(6.0)
+        
+        let quit = SKSpriteNode(imageNamed:  "Quit")
+        quit.position = CGPoint(x: 0, y: -70)
+        quit.zPosition = CGFloat(6.0)
+        
+        self.addChild(panel)
+        self.addChild(play_again)
+        self.addChild(quit)
+        
     }
     func nextQuestion() {
         let play_scene = GameplayScene(fileNamed: "Spin")
