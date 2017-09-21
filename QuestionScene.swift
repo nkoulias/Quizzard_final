@@ -33,7 +33,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         var setup = NSKeyedUnarchiver.unarchiveObject(with: decode_data!) as! [Questions]
         let decode_topic = defaults.object(forKey: "Topic") as? String
         narrow = setup.filter({$0.topic == decode_topic})
-        let qCount = narrow.count
+        let qCount = Int(narrow.count)
         if (qCount == 0) {
             gameOver()
         }
