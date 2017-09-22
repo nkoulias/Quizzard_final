@@ -38,6 +38,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
     public var finishedRotation: Bool = false
     var SoundEffect: AVAudioPlayer!
     var sound: SystemSoundID = 0
+    var play_button: SKNode?
+    var leader_button: SKNode?
     
     
     override func didMove(to view: SKView) {
@@ -49,6 +51,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
         geography = player?.childNode(withName: "geography") as! Geo?
         pin = self.childNode(withName: "pin") as! Pin?
         finishedRotation = false
+        play_button = self.childNode(withName: "play_button")
+        leader_button = self.childNode(withName: "leaderboard")
         player?.initializePlayer()
         maths?.initializeMaths()
         science?.initializeScience()
@@ -66,24 +70,21 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
         saveHighscore(gameScore: Int(GameManager.instance.getScore()))
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        //let play = self.childNode(withName: "play_button")
         for touch in touches {
             let location = touch.location(in: self)
             //Start spinning the wheel
             if atPoint(location).name == "play_button" {
                 let hornSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "last_sound", ofType: "wav")!)
-                
                 AudioServicesCreateSystemSoundID(hornSound, &self.sound)
+                play_button!.isUserInteractionEnabled = true
+                leader_button!.isUserInteractionEnabled = true
                 player?.physicsBody?.angularVelocity = 0
                 player?.rotatePlayer()
                 
                 //Click back button
             } else if atPoint(location).name == "leaderboard" {
                 showLeader()
-            } else if atPoint(location).name == "settings_button" {
-                let play_scene = SettingsScene(fileNamed: "SettingsScene")
-                play_scene?.scaleMode = .aspectFill
-                self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
             }
         }
     }
@@ -93,6 +94,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
         if (speed != CGFloat(0.0)) {
             if (speed! <= CGFloat(0.1)){
                 finishedRotation = true
+                play_button!.isUserInteractionEnabled = false
+                leader_button!.isUserInteractionEnabled = false
             }
         }
     }
