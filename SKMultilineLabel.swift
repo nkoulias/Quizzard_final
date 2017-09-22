@@ -30,7 +30,7 @@ class SKMultilineLabel: SKNode {
     var rect:SKShapeNode?
     var labels:[SKLabelNode] = []
     
-    init(text:String, labelWidth:Int = 700, pos:CGPoint, fontName:String="Avenir.ttc",fontSize:CGFloat=30,fontColor:UIColor=UIColor.white,leading:Int? = nil, alignment:SKLabelHorizontalAlignmentMode = .center, shouldShowBorder:Bool = false)
+    init(text:String, labelWidth:Int = 700, pos:CGPoint, fontName:String="Avenir",fontSize:CGFloat=30,fontColor:UIColor=UIColor.white,leading:Int? = nil, alignment:SKLabelHorizontalAlignmentMode = .center, shouldShowBorder:Bool = false)
     {
         self.text = text
         self.labelWidth = labelWidth

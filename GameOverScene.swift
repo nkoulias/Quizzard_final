@@ -7,11 +7,17 @@
 //
 
 import SpriteKit
+import CloudKit
+import MobileCoreServices
+import AVFoundation
+import AVKit
+import Darwin
+import Foundation
+import GameKit
 
 class GameOverScene: SKScene {
     
     override func didMove(to view: SKView) {
-        self.addChild(GameManager.instance.main_char)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

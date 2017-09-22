@@ -34,15 +34,16 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         let decode_topic = defaults.object(forKey: "Topic") as? String
         narrow = setup.filter({$0.topic == decode_topic})
         let qCount = Int(narrow.count)
-        if (qCount == 0) {
+        if (qCount > 0) {
+            result = pickQuestion(input: UInt32(qCount))
+            showData(input: result, filter: narrow)
+            RandomQuestions(input: Int(result), filter: narrow)
+            setup = setup.filter({$0.quest != narrow[result].quest})
+            let encode_data = NSKeyedArchiver.archivedData(withRootObject: setup)
+            defaults.set(encode_data, forKey: "Questions")
+        } else {
             gameOver()
         }
-        result = pickQuestion(input: UInt32(qCount))
-        showData(input: result, filter: narrow)
-        RandomQuestions(input: Int(result), filter: narrow)
-        setup = setup.filter({$0.quest != narrow[result].quest})
-        let encode_data = NSKeyedArchiver.archivedData(withRootObject: setup)
-        defaults.set(encode_data, forKey: "Questions")
         
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -180,7 +181,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         self.addChild(question_label)
         
         let a_label = SKLabelNode()
-        a_label.fontName = "Avenir.ttf"
+        a_label.fontName = "Avenir"
         a_label.fontSize = 38
         a_label.color = UIColor(white: 1, alpha: 1)
         a_label.position = CGPoint(x: 0, y: 170)
@@ -188,7 +189,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         a_label.text = filter[input].A
         self.addChild(a_label)
         let b_label = SKLabelNode()
-        b_label.fontName = "Avenir.ttf"
+        b_label.fontName = "Avenir"
         b_label.fontSize = 38
         b_label.color = UIColor(white: 1, alpha: 1)
         b_label.position = CGPoint(x: 0, y: 20)
@@ -196,7 +197,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         b_label.text = filter[input].B
         self.addChild(b_label)
         let c_label = SKLabelNode()
-        c_label.fontName = "Avenir.ttf"
+        c_label.fontName = "Avenir"
         c_label.fontSize = 38
         c_label.color = UIColor(white: 1, alpha: 1)
         c_label.position = CGPoint(x: 0, y: -130)
@@ -204,7 +205,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         c_label.text = filter[input].C
         self.addChild(c_label)
         let d_label = SKLabelNode()
-        d_label.fontName = "Avenir.ttf"
+        d_label.fontName = "Avenir"
         d_label.fontSize = 38
         d_label.color = UIColor(white: 1, alpha: 1)
         d_label.position = CGPoint(x: 0, y: -280)
@@ -214,23 +215,11 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         
     }
     func gameOver() {
-        let panel = SKSpriteNode(imageNamed: "Panel")
-        panel.position = CGPoint(x: 0, y: 0)
-        panel.zPosition = CGFloat(5.0)
-        
-        let play_again = SKSpriteNode(imageNamed:  "Play_again")
-        play_again.position = CGPoint(x: 0, y: 20)
-        play_again.zPosition = CGFloat(6.0)
-        
-        let quit = SKSpriteNode(imageNamed:  "Quit")
-        quit.position = CGPoint(x: 0, y: -70)
-        quit.zPosition = CGFloat(6.0)
-        
-        self.addChild(panel)
-        self.addChild(play_again)
-        self.addChild(quit)
-        
+        let play_scene = GameOverScene(fileNamed: "GameOver")
+        play_scene?.scaleMode = .aspectFill
+        self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
     }
+    
     func nextQuestion() {
         let play_scene = GameplayScene(fileNamed: "Spin")
         play_scene?.scaleMode = .aspectFill
