@@ -25,6 +25,7 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
     var narrow = [Questions]()
     let getScore = GameManager.instance.getScore()
     let getLives = GameManager.instance.getLives()
+    var qNum:Int = 0
     
     override func didMove(to view: SKView) {
         synth.delegate = self
@@ -34,20 +35,15 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         let decode_topic = defaults.object(forKey: "Topic") as? String
         narrow = setup.filter({$0.topic == decode_topic})
         let qCount = Int(narrow.count)
-        if (qCount > 0) {
-            result = pickQuestion(input: UInt32(qCount))
-            showData(input: result, filter: narrow)
-            RandomQuestions(input: Int(result), filter: narrow)
-            setup = setup.filter({$0.quest != narrow[result].quest})
-            let encode_data = NSKeyedArchiver.archivedData(withRootObject: setup)
-            defaults.set(encode_data, forKey: "Questions")
-        } else {
-            gameOver()
-        }
-        
+        result = pickQuestion(input: UInt32(qCount))
+        showData(input: result, filter: narrow)
+        RandomQuestions(input: Int(result), filter: narrow)
+        setup = setup.filter({$0.quest != narrow[result].quest})
+        let encode_data = NSKeyedArchiver.archivedData(withRootObject: setup)
+        defaults.set(encode_data, forKey: "Questions")        
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        qNum = narrow.count
         for touch in touches {
             let location = touch.location(in: self)
             if atPoint(location).name == "button_a" {
@@ -56,7 +52,12 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
                     GameManager.instance.setScore(score: getScore+100)
                     synth.speak(correctUtterance)
                     narrow.remove(at: result)
-                    nextQuestion()
+                    qNum = qNum - 1
+                    if (qNum < 1) {
+                        gameOver()
+                    } else {
+                        nextQuestion()
+                    }
                 }
                 else {
                         synth.stopSpeaking(at: AVSpeechBoundary.word)
@@ -81,7 +82,12 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
             
                     synth.speak(correctUtterance)
                     narrow.remove(at: result)
-                    nextQuestion()
+                    qNum = qNum - 1
+                    if (qNum < 1) {
+                        gameOver()
+                    } else {
+                        nextQuestion()
+                    }
                 }
                 else {
                     synth.speak(incorrectUtterance)
@@ -104,7 +110,12 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
                     GameManager.instance.setScore(score: getScore+100)
                     synth.speak(correctUtterance)
                     narrow.remove(at: result)
-                    nextQuestion()
+                    qNum = qNum - 1
+                    if (qNum < 1) {
+                        gameOver()
+                    } else {
+                        nextQuestion()
+                    }
                 }
                 else {
                     narrow.remove(at: result)
@@ -127,7 +138,12 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
                     GameManager.instance.setScore(score: getScore+100)
                     synth.speak(correctUtterance)
                     narrow.remove(at: result)
-                    nextQuestion()
+                    qNum = qNum - 1
+                    if (qNum < 1) {
+                        gameOver()
+                    } else {
+                        nextQuestion()
+                    }
                 }
                 else {
                     synth.stopSpeaking(at: AVSpeechBoundary.word)
