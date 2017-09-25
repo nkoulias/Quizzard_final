@@ -78,12 +78,13 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
                 let hornSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "last_sound", ofType: "wav")!)
                 AudioServicesCreateSystemSoundID(hornSound, &self.sound)
                 play_button!.isUserInteractionEnabled = true
-                leader_button!.isUserInteractionEnabled = true
+                //leader_button!.isUserInteractionEnabled = true
                 player?.physicsBody?.angularVelocity = 0
                 player?.rotatePlayer()
                 
                 //Click back button
             } else if atPoint(location).name == "leaderboard" {
+                self.view?.isPaused = true
                 showLeader()
             }
         }
@@ -95,7 +96,6 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
             if (speed! <= CGFloat(0.1)){
                 finishedRotation = true
                 play_button!.isUserInteractionEnabled = false
-                leader_button!.isUserInteractionEnabled = false
             }
         }
     }
@@ -144,5 +144,6 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
     }
     func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
         gameCenterViewController.dismiss(animated: true, completion: nil)
+        self.view?.isPaused = false
     }
 }
