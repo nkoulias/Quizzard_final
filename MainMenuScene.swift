@@ -19,7 +19,7 @@ import GameKit
 class MainMenuScene: SKScene {
     
     override func didMove(to view: SKView) {
-        
+
         let defaults = UserDefaults.standard
         let data:Questions = Questions(topic: "", quest: "", A: "", B: "", C: "", D: "", answer: "")
         GameManager.instance.initializeGameData()
