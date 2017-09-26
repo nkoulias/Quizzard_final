@@ -22,7 +22,7 @@ class GameData: NSObject, NSCoding {
     }
     
     private var isVoiceOn = false
-    private var accent:String = "en-GB"
+    private var accent:String = "en-US"
     private var voiceRate:Float = 0.5
     private var voicePitch:Float = 1.0
     private var character:String = ""
