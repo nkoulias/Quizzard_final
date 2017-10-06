@@ -202,45 +202,17 @@ class QuestionScene: SKScene, AVSpeechSynthesizerDelegate {
         question_label.zPosition = CGFloat(5.0)
         self.addChild(question_label)
         
-        let a_label = SKMultilineLabel(text: filter[input].A, labelWidth: 500, pos: CGPoint(x: 0,y: 200), fontSize:38.0)
+        let a_label = SKMultilineLabel(text: filter[input].A, labelWidth: 300, pos: CGPoint(x: 0,y: 200), fontSize:38.0)
         a_label.zPosition = CGFloat(5.0)
-        //let a_label = SKLabelNode()
-//        a_label.fontName = "Avenir"
-//        a_label.fontSize = 38
-//        a_label.color = UIColor(white: 1, alpha: 1)
-//        a_label.position = CGPoint(x: 0, y: 170)
-//        a_label.zPosition = CGFloat(5.0)
-//        a_label.text = filter[input].A
         self.addChild(a_label)
-        let b_label = SKMultilineLabel(text: filter[input].B, labelWidth: 500, pos: CGPoint(x: 0,y: 50), fontSize:38.0)
+        let b_label = SKMultilineLabel(text: filter[input].B, labelWidth: 300, pos: CGPoint(x: 0,y: 50), fontSize:38.0)
         b_label.zPosition = CGFloat(5.0)
-//        let b_label = SKLabelNode()
-//        b_label.fontName = "Avenir"
-//        b_label.fontSize = 38
-//        b_label.color = UIColor(white: 1, alpha: 1)
-//        b_label.position = CGPoint(x: 0, y: 20)
-//        b_label.zPosition = CGFloat(5.0)
-//        b_label.text = filter[input].B
         self.addChild(b_label)
-        let c_label = SKMultilineLabel(text: filter[input].C, labelWidth: 500, pos: CGPoint(x: 0,y: -100), fontSize:38.0)
+        let c_label = SKMultilineLabel(text: filter[input].C, labelWidth: 300, pos: CGPoint(x: 0,y: -100), fontSize:38.0)
         c_label.zPosition = CGFloat(5.0)
-//        let c_label = SKLabelNode()
-//        c_label.fontName = "Avenir"
-//        c_label.fontSize = 38
-//        c_label.color = UIColor(white: 1, alpha: 1)
-//        c_label.position = CGPoint(x: 0, y: -130)
-//        c_label.zPosition = CGFloat(5.0)
-//        c_label.text = filter[input].C
         self.addChild(c_label)
-        let d_label = SKMultilineLabel(text: filter[input].D, labelWidth: 500, pos: CGPoint(x: 0,y: -250), fontSize:38.0)
+        let d_label = SKMultilineLabel(text: filter[input].D, labelWidth: 300, pos: CGPoint(x: 0,y: -250), fontSize:38.0)
         d_label.zPosition = CGFloat(5.0)
-//        let d_label = SKLabelNode()
-//        d_label.fontName = "Avenir"
-//        d_label.fontSize = 38
-//        d_label.color = UIColor(white: 1, alpha: 1)
-//        d_label.position = CGPoint(x: 0, y: -280)
-//        d_label.zPosition = CGFloat(5.0)
-//        d_label.text = filter[input].D
         self.addChild(d_label)
         
     }
