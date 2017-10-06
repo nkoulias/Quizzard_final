@@ -28,11 +28,11 @@ class Player: SKSpriteNode {
         self.physicsBody?.pinned = true
     }
     func rotatePlayer() {
-        let random = GKRandomDistribution(lowestValue: 20, highestValue: 120)
+        let random = GKRandomDistribution(lowestValue: 50, highestValue: 2000)
         let r = random.nextInt()
         self.physicsBody?.angularVelocity = 0
         self.physicsBody?.angularVelocity = CGFloat(r)
-        self.physicsBody?.angularDamping = 1.02
+        self.physicsBody?.angularDamping = 0.6
         
     }
 }

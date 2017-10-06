@@ -9,25 +9,12 @@
 import SpriteKit
 import GameKit
 import AVFoundation
-import AudioToolbox
 
-func saveHighscore(gameScore: Int) {
-    
-    if GKLocalPlayer.localPlayer().isAuthenticated {
-        
-        let scoreReporter = GKScore(leaderboardIdentifier: "com.leaderboard.quizzard")
-        scoreReporter.value = Int64(gameScore)
-        let scoreArray: [GKScore] = [scoreReporter]
-        
-        GKScore.report(scoreArray, withCompletionHandler: {error -> Void in
-            if error != nil {
-                print("An error has occured: \(String(describing: error))")
-            }
-        })
-    }
-}
 class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDelegate, GKGameCenterControllerDelegate {
     
+    var musicArray = ["benny_hill", "circus", "fur_elise", "games", "pink_panther", "spongebob", "swan_lake"]
+    var randomIndex = 0
+    var audioPlayer = AVAudioPlayer()
     private var player: Player?
     private var maths: Maths?
     private var history: History?
@@ -36,13 +23,21 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
     var pin: Pin?
     public var topic :String = ""
     public var finishedRotation: Bool = false
-    var SoundEffect: AVAudioPlayer!
-    var sound: SystemSoundID = 0
     var play_button: SKNode?
     var leader_button: SKNode?
     
     
     override func didMove(to view: SKView) {
+        let pickSound = playMusic()
+        let music = Bundle.main.path(forResource: pickSound, ofType: "mp3")
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: music! ))
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+            try AVAudioSession.sharedInstance().setActive(true)
+        }
+        catch{
+            print(error)
+        }
         
         player = self.childNode(withName: "spinner") as! Player?;
         maths = player?.childNode(withName: "maths") as! Maths?
@@ -70,26 +65,25 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
         saveHighscore(gameScore: Int(GameManager.instance.getScore()))
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //let play = self.childNode(withName: "play_button")
         for touch in touches {
             let location = touch.location(in: self)
+    
             //Start spinning the wheel
             if atPoint(location).name == "play_button" {
-                let hornSound = NSURL(fileURLWithPath: Bundle.main.path(forResource: "last_sound", ofType: "wav")!)
-                AudioServicesCreateSystemSoundID(hornSound, &self.sound)
                 play_button!.isUserInteractionEnabled = true
-                //leader_button!.isUserInteractionEnabled = true
                 player?.physicsBody?.angularVelocity = 0
+                play_button?.alpha = 0.30
                 player?.rotatePlayer()
+                audioPlayer.play()
                 
-                //Click back button
-            } else if atPoint(location).name == "leaderboard" {
-                self.view?.isPaused = true
-                showLeader()
             }
+//            else if atPoint(location).name == "leaderboard" {
+//                run(SKAction.playSoundFileNamed("button_push.mp3", waitForCompletion: false))
+//                self.view?.isPaused = true
+//                showLeader()
+//            }
         }
     }
-    
     override func didSimulatePhysics() {
         let speed = player?.physicsBody?.angularVelocity
         if (speed != CGFloat(0.0)) {
@@ -101,6 +95,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
     }
     override func didFinishUpdate() {
         if (finishedRotation == true) {
+            audioPlayer.setVolume(0.0, fadeDuration: 0.5)
             let play_scene = QuestionScene(fileNamed: "QuestionScene")
             play_scene?.scaleMode = .aspectFill
             self.view?.presentScene(play_scene!, transition: SKTransition.doorsOpenVertical(withDuration: 1))
@@ -121,29 +116,45 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDeleg
         if (firstBody.node?.name == "pin" && secondBody.node?.name == "geography") {
             let set_topic = secondBody.node?.name
             defaults.set(set_topic, forKey: "Topic")
-            AudioServicesPlaySystemSound(self.sound)
         } else if (firstBody.node?.name == "pin" && secondBody.node?.name == "maths") {
             let set_topic = secondBody.node?.name
             defaults.set(set_topic, forKey: "Topic")
-            AudioServicesPlaySystemSound(self.sound)
         } else if (firstBody.node?.name == "pin" && secondBody.node?.name == "history") {
             let set_topic = secondBody.node?.name
             defaults.set(set_topic, forKey: "Topic")
-            AudioServicesPlaySystemSound(self.sound)
         } else if (firstBody.node?.name == "pin" && secondBody.node?.name == "science") {
             let set_topic = secondBody.node?.name
             defaults.set(set_topic, forKey: "Topic")
-            AudioServicesPlaySystemSound(self.sound)
         }
     }
-    func showLeader() {
-        let viewControllerVar = self.view?.window?.rootViewController
-        let gKGCViewController = GKGameCenterViewController()
-        gKGCViewController.gameCenterDelegate = (self as GKGameCenterControllerDelegate)
-        viewControllerVar?.present(gKGCViewController, animated: true, completion: nil)
-    }
+//    func showLeader() {
+//        let viewControllerVar = self.view?.window?.rootViewController
+//        let gKGCViewController = GKGameCenterViewController()
+//        gKGCViewController.gameCenterDelegate = (self as GKGameCenterControllerDelegate)
+//        viewControllerVar?.present(gKGCViewController, animated: true, completion: nil)
+//    }
     func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
         gameCenterViewController.dismiss(animated: true, completion: nil)
         self.view?.isPaused = false
+    }
+    func saveHighscore(gameScore: Int) {
+        
+        if GKLocalPlayer.localPlayer().isAuthenticated {
+            
+            let scoreReporter = GKScore(leaderboardIdentifier: "com.leaderboard.quizzard")
+            scoreReporter.value = Int64(gameScore)
+            let scoreArray: [GKScore] = [scoreReporter]
+            
+            GKScore.report(scoreArray, withCompletionHandler: {error -> Void in
+                if error != nil {
+                    print("An error has occured: \(String(describing: error))")
+                }
+            })
+        }
+    }
+    func playMusic ()-> String {
+        randomIndex = Int(arc4random_uniform(UInt32(musicArray.count)))
+        let selectedFileName = musicArray[randomIndex]
+        return selectedFileName
     }
 }
