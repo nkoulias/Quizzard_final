@@ -12,7 +12,7 @@ import AVFoundation
 
 class GameplayScene: SKScene, SKPhysicsContactDelegate, AVSpeechSynthesizerDelegate, GKGameCenterControllerDelegate {
     
-    var musicArray = ["benny_hill", "circus", "fur_elise", "games", "pink_panther", "spongebob", "swan_lake"]
+    var musicArray = ["games", "spongebob"]
     var randomIndex = 0
     var audioPlayer = AVAudioPlayer()
     private var player: Player?
